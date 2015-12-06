@@ -7,7 +7,8 @@
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "start": "node devServer.js",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,20 @@
     "webpack-hot-middleware": "^2.0.0"
   },
   "dependencies": {
+    "autoresponsive-react": "^1.1.8",
+    "css-loader": "^0.23.0",
+    "flux": "^2.1.1",
+    "history": "^1.13.1",
+    "i": "^0.3.3",
+    "material-ui": "^0.13.4",
     "react": "^0.14.0",
-    "react-dom": "^0.14.0"
-  }
+    "react-dom": "^0.14.0",
+    "react-router": "^1.0.1",
+    "react-tap-event-plugin": "^0.2.1",
+    "style-loader": "^0.13.0",
+    "superagent": "^1.5.0"
+  },
+  "pre-commit": [
+    "lint"
+  ]
 }
