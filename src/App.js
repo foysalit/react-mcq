@@ -46,7 +46,7 @@ export class App extends Component {
 				  onRightIconButtonTouchTap={this.changePage.bind(this)}
 				  iconElementRight={
 				    <IconMenu iconButtonElement={
-				      <IconButton><FontIcon className="more-vert">accessible</FontIcon></IconButton>
+				      <IconButton iconClassName="material-icons">more_vert</IconButton>
 				    }>
 				      <MenuItem primaryText="Refresh"/>
 				      <MenuItem primaryText="Help"/>
