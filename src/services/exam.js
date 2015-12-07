@@ -1,12 +1,12 @@
-import * as Http from 'superagent';
 import ExamActions from '../actions/exam';
+import { callApi } from './utils';
 
 export class ExamService {
 	static apiEndPoint = 'http://localhost:3000/api/v1/exams'
 
 	getAll() {
-		return Http.get(ExamService.apiEndPoint).end(function (err, exams) {
-			ExamActions.load(exams.body);
+		return callApi(ExamService.apiEndPoint).then(function (response) {
+			ExamActions.load(response.body);
 		});
 	}
 }
