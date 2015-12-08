@@ -4,46 +4,76 @@ import IconMenu from 'material-ui/lib/menus/icon-menu';
 import MenuItem from 'material-ui/lib/menus/menu-item'; 
 import IconButton from 'material-ui/lib/icon-button'; 
 import LeftNav from 'material-ui/lib/left-nav';
+import AuthStore from './stores/auth';
 
-const menuItems = [
-	{ route: '/exams', text: 'Exams' },
-	{ route: '/questions', text: 'Questions' },
+const userMenuItems = [
+	{ route: 'exams', text: 'Exams' },
+	{ route: 'questions', text: 'Questions' },
 ];
+
+const guestMenuItems = [
+	{ route: 'auth/signin', text: 'SignIn' },
+	{ route: 'auth/signup', text: 'SignUp' }
+];
+
+function _getMenuItems (user) {
+	if (Object.keys(user).length > 0)
+		return userMenuItems;
+
+	return guestMenuItems;
+}
+
+function _getHomeState () {
+	return {
+		leftNavOpen: false,
+		user: AuthStore.getUser(),
+		menuItems: _getMenuItems(AuthStore.getUser())
+	};
+}
 
 export class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			leftNavOpen: false
-		};
+		this.state = _getHomeState();
+	}
+
+	componentDidMount() {
+		AuthStore.addChangeListener(this._authChanged.bind(this));
+	}
+
+	componentWillUnmount() {
+		AuthStore.removeChangeListener(this._authChanged.bind(this));
+	}
+
+	_authChanged() {
+		this.setState(_getHomeState);
 	}
 
 	changePage() {
 		this.setState({
 			leftNavOpen: !this.state.leftNavOpen
 		});
+		this.refs.leftNav.toggle();
+		console.log('change page clicked', this.state);
 	}
 
-	pageChanged() {
-		console.log('page');
+	pageChanged(e, key, data) {
+		this.props.history.pushState(null, data.route);
 	}
 
 	render() {
+		console.log(this.state);
 		return (
 			<div>
 				<LeftNav 
-					openRight={true}
 					docked={false}
+				  	ref="leftNav"
 					open={this.state.leftNavOpen} 
-					ref="leftNav" 
 					onChange={this.pageChanged.bind(this)}
-					menuItems={menuItems} />
+					menuItems={this.state.menuItems} />
 				<AppBar
 				  title="Title"
-				  iconElementLeft={<IconButton><Icons.NavigationMenu /></IconButton>}
-				  onTitleTouchTap={this.changePage.bind(this)}
 				  onLeftIconButtonTouchTap={this.changePage.bind(this)}
-				  onRightIconButtonTouchTap={this.changePage.bind(this)}
 				  iconElementRight={
 				    <IconMenu iconButtonElement={
 				      <IconButton iconClassName="material-icons">more_vert</IconButton>
