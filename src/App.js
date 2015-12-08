@@ -5,19 +5,20 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import IconButton from 'material-ui/lib/icon-button'; 
 import LeftNav from 'material-ui/lib/left-nav';
 import AuthStore from './stores/auth';
+import CommonStore from './stores/common';
 
-const userMenuItems = [
-	{ route: 'exams', text: 'Exams' },
-	{ route: 'questions', text: 'Questions' },
-];
+function _getMenuItems () {
+	const userMenuItems = [
+		{ route: 'exams', text: 'Exams'},
+		{ route: 'questions', text: 'Questions'},
+	];
 
-const guestMenuItems = [
-	{ route: 'auth/signin', text: 'SignIn' },
-	{ route: 'auth/signup', text: 'SignUp' }
-];
-
-function _getMenuItems (user) {
-	if (Object.keys(user).length > 0)
+	const guestMenuItems = [
+		{ route: 'auth/signin', text: 'SignIn'},
+		{ route: 'auth/signup', text: 'SignUp'}
+	];
+	
+	if (AuthStore.isLoggedIn())
 		return userMenuItems;
 
 	return guestMenuItems;
@@ -25,9 +26,9 @@ function _getMenuItems (user) {
 
 function _getHomeState () {
 	return {
-		leftNavOpen: false,
+		appbar: CommonStore.getAppbarData(),
 		user: AuthStore.getUser(),
-		menuItems: _getMenuItems(AuthStore.getUser())
+		menuItems: _getMenuItems()
 	};
 }
 
@@ -39,22 +40,24 @@ export class App extends Component {
 
 	componentDidMount() {
 		AuthStore.addChangeListener(this._authChanged.bind(this));
+		CommonStore.addChangeListener(this._commonDataChanged.bind(this));
 	}
 
 	componentWillUnmount() {
 		AuthStore.removeChangeListener(this._authChanged.bind(this));
+		CommonStore.removeChangeListener(this._commonDataChanged.bind(this));
 	}
 
 	_authChanged() {
-		this.setState(_getHomeState);
+		this.setState(_getHomeState());
+	}
+
+	_commonDataChanged() {
+		this.setState(_getHomeState());
 	}
 
 	changePage() {
-		this.setState({
-			leftNavOpen: !this.state.leftNavOpen
-		});
 		this.refs.leftNav.toggle();
-		console.log('change page clicked', this.state);
 	}
 
 	pageChanged(e, key, data) {
@@ -62,17 +65,15 @@ export class App extends Component {
 	}
 
 	render() {
-		console.log(this.state);
 		return (
 			<div>
 				<LeftNav 
 					docked={false}
 				  	ref="leftNav"
-					open={this.state.leftNavOpen} 
 					onChange={this.pageChanged.bind(this)}
 					menuItems={this.state.menuItems} />
 				<AppBar
-				  title="Title"
+				  title={this.state.appbar.title}
 				  onLeftIconButtonTouchTap={this.changePage.bind(this)}
 				  iconElementRight={
 				    <IconMenu iconButtonElement={
@@ -88,32 +89,6 @@ export class App extends Component {
 					{this.props.children}
 				</div>	
 			</div>
-		);
-	}
-}
-
-class Counter extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { counter: 0 };
-		this.interval = setInterval(() => this.tick(), 1000);
-	}
-
-	tick() {
-		this.setState({
-			counter: this.state.counter + this.props.increment
-		});
-	}
-
-	componentWillUnmount() {
-		clearInterval(this.interval);
-	}
-
-	render() {
-		return (
-			<h1 style={{ color: this.props.color }}>
-				Counter ({this.props.increment}): {this.state.counter}
-			</h1>
 		);
 	}
 }

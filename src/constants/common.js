@@ -1,0 +1,3 @@
+export default {
+	CHANGE_APPBAR_TITLE: 'CHANGE_APPBAR_TITLE',
+};

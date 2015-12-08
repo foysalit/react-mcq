@@ -3,6 +3,7 @@ import ExamActions from '../../actions/exam';
 import ExamStore from '../../stores/exam';
 import ExamService from '../../services/exam';
 import ExamSummary from './summary';
+import AppActions from '../../actions/app';
 import { Card, CardHeader, CardText, CardActions, Avatar, FlatButton } from 'material-ui'; 
 import AutoResponsive from 'autoresponsive-react';
 
@@ -27,6 +28,8 @@ export class Exam extends Component {
 				containerWidth: React.findDOMNode(this.refs.container).clientWidth
 			});
 		}, false);
+		
+		AppActions.changeTitle('Exams');
 	}
 
 	getAutoResponsiveProps() {
@@ -54,11 +57,13 @@ export class Exam extends Component {
 	    };
 
 		return (
-			<AutoResponsive ref="container" {...this.getAutoResponsiveProps()}>
-				{ this.state.exams.map((exam) => {
-					return <ExamSummary exam={exam} key={exam.id} style={style}/>
-				}) }
-			</AutoResponsive>
+			<div style={{ padding: '0 1%' }}>
+				<AutoResponsive ref="container" {...this.getAutoResponsiveProps()}>
+					{ this.state.exams.map((exam) => {
+						return <ExamSummary exam={exam} key={exam.id} style={style}/>
+					}) }
+				</AutoResponsive>
+			</div>
 		);
 	}
 }

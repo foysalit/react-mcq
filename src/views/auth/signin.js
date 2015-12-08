@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AuthActions from '../../actions/auth';
+import AppActions from '../../actions/app';
 import AuthStore from '../../stores/auth';
 import { 
 	ClearFix, Styles,
@@ -46,6 +47,8 @@ export default class AuthSignin extends Component {
 		AuthStore.addChangeListener(() => {
 			this.setState(_getDataState());
 		});
+
+		AppActions.changeTitle('Sign In');
 	}
 
 	componentWillUnmount() {
@@ -60,9 +63,11 @@ export default class AuthSignin extends Component {
 		return (
 			<ClearFix style={{ padding: '2%' }}>
 
-				<div style={{ color: Colors.redA400 }}>{ this.state.errors.map((message, i) => {
-					return <p key={i}> { message } </p>
-				})}</div>
+				<div style={{ color: Colors.redA400 }}>
+					{ this.state.errors.map((message, i) => {
+						return <p key={i}> { message } </p>
+					})}
+				</div>
 
 				<div style={ styles.wrapper }>
 					<TextField 

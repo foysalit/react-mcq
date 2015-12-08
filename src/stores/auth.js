@@ -25,6 +25,10 @@ class AuthStore extends EventEmitter {
 		return _user;
 	}
 
+	isLoggedIn() {
+		return Object.keys(_user).length > 0;
+	}
+
 	getErrors() {
 		return _errors;
 	}
