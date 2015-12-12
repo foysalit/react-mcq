@@ -32,11 +32,12 @@ export default {
 		});
 	},
 
-	loadForExam: function (examId) {
-		QuestionService.getForExam()
-		AppDispatcher.handleViewAction({
-			actionType: QuestionConstants.QUESTION_LOAD,
-			data: examId
+	loadChoices: function (questionId) {
+		return QuestionService.getChoices(questionId).then((choices) => {
+			AppDispatcher.handleViewAction({
+				actionType: QuestionConstants.QUESTION_LOAD_CHOICES,
+				data: {questionId, choices}
+			});
 		});
 	},
 };

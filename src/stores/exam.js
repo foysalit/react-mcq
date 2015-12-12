@@ -29,7 +29,6 @@ class ExamStore extends EventEmitter {
 	}
 
 	getOne(examId) {
-		console.log(_exams);
 		return findWhere(_exams, {id: parseInt(examId)});
 	}
 

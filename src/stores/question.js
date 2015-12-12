@@ -1,6 +1,7 @@
 import QuestionDispatcher from '../dispatchers/question';
 import QuestionConstants from '../constants/question';
 import { EventEmitter } from 'events';
+import { findIndex, findWhere } from 'lodash';
 
 var CHANGE_EVENT = 'change';
 
@@ -14,6 +15,14 @@ function createQuestion (question) {
 	_questions.push(question);
 }
 
+function loadChoices (data) {
+	const {questionId, choices} = data;
+	const questionIndex = findIndex(_questions, 'id', parseInt(questionId));
+
+	if (questionIndex >= 0)
+		_questions[questionIndex].choices = choices;
+}
+
 class QuestionStore extends EventEmitter {
 	constructor() {
 		super();
@@ -21,6 +30,10 @@ class QuestionStore extends EventEmitter {
 
 	getAll() {
 		return _questions;
+	}
+
+	getOne(questionId) {
+		return findWhere(_questions, {id: questionId});
 	}
 
 	emitChange() {
@@ -46,6 +59,9 @@ QuestionDispatcher.register(function(payload){
 		// Respond to RECEIVE_DATA action
 		case QuestionConstants.QUESTION_LOAD:
 			loadQuestions(action.data);
+			break;
+		case QuestionConstants.QUESTION_LOAD_CHOICES:
+			loadChoices(action.data);
 			break;
 		case QuestionConstants.QUESTION_CREATE:
 			createQuestion(action.data);
