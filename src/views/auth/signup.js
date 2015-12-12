@@ -6,6 +6,7 @@ import {
 	TextField,
 	RaisedButton, FloatingActionButton, FontIcon 
 } from 'material-ui'; 
+import { Link } from 'react-router';
 
 const { Colors } = Styles;
 
@@ -95,7 +96,7 @@ export default class AuthSignup extends Component {
 					labelPosition="after"
 					linkButton={true} 
 					mini={true}
-					href={`/#/auth/signin`}>
+					containerElement={<Link to="/auth/signin" />}>
 					<FontIcon className="material-icons">account_circle</FontIcon>
 				</FloatingActionButton>
 

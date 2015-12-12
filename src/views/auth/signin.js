@@ -7,6 +7,7 @@ import {
 	TextField,
 	RaisedButton, FloatingActionButton, FontIcon 
 } from 'material-ui'; 
+import { Link } from 'react-router';
 
 const { Colors } = Styles;
 
@@ -43,18 +44,18 @@ export default class AuthSignin extends Component {
 		AuthActions.signin(credentials);
 	}
 
+	getDataState() {
+		this.setState(_getDataState());
+	}
+
 	componentDidMount() {
-		AuthStore.addChangeListener(() => {
-			this.setState(_getDataState());
-		});
+		AuthStore.addChangeListener(this.getDataState.bind(this));
 
 		AppActions.changeTitle('Sign In');
 	}
 
 	componentWillUnmount() {
-		AuthStore.removeChangeListener(() => {
-			this.setState(_getDataState());
-		});
+		AuthStore.removeChangeListener(this.getDataState.bind(this));
 	}
 
 	render() {
@@ -63,11 +64,13 @@ export default class AuthSignin extends Component {
 		return (
 			<ClearFix style={{ padding: '2%' }}>
 
-				<div style={{ color: Colors.redA400 }}>
-					{ this.state.errors.map((message, i) => {
-						return <p key={i}> { message } </p>
-					})}
-				</div>
+				{(this.state.errors && this.state.errors.length > 0) ?
+					<div style={{ color: Colors.redA400 }}>
+						{ this.state.errors.map((message, i) => {
+							return <p key={i}> { message } </p>
+						})}
+					</div>
+				: null }
 
 				<div style={ styles.wrapper }>
 					<TextField 
@@ -91,7 +94,7 @@ export default class AuthSignin extends Component {
 					labelPosition="after"
 					linkButton={true} 
 					mini={true}
-					href={`/#/auth/signup`}>
+					containerElement={<Link to="/auth/signup" />}>
 					<FontIcon className="material-icons">lock_open</FontIcon>
 				</FloatingActionButton>
 

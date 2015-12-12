@@ -13,6 +13,7 @@ export class Auth extends Component {
 	_authChanged () {
 		const { location, history } = this.props
 
+		console.log(AuthStore.isLoggedIn());
 		if (!AuthStore.isLoggedIn())
 			return;
 

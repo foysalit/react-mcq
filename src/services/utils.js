@@ -3,7 +3,6 @@ import AuthService from './auth';
 
 export function callApi (url, method, data) {
 	const headers = AuthService.getHeaders();
-	console.log(headers);
 
 	return new Promise((resolve, reject) => {
 		let request = null;

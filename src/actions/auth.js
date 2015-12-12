@@ -34,4 +34,19 @@ export default {
 			});
 		});
 	},
+
+	checkUser: function () {
+		return AuthService.validate().then((data) => {
+			console.log(data);
+			AuthDispatcher.handleViewAction({
+				actionType: AuthConstants.AUTH_LOGIN,
+				data: data
+			});
+		}).catch((errors) => {
+			AuthDispatcher.handleViewAction({
+				actionType: AuthConstants.AUTH_ERROR,
+				data: errors
+			});
+		});
+	}
 };

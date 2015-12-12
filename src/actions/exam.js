@@ -1,5 +1,6 @@
 import ExamDispatcher from '../dispatchers/exam';
 import ExamConstants from '../constants/exam';
+import ExamService from '../services/exam';
 
 export default {
 	create: function(newContact) {
@@ -41,4 +42,22 @@ export default {
 			data: exams
 		});
 	},
+
+	loadOne: function (examId) {
+		ExamService.getOne(examId).then(function (exam) {
+			ExamDispatcher.handleViewAction({
+				actionType: ExamConstants.EXAM_LOAD_ONE,
+				data: exam
+			});
+		});
+	},
+
+	loadQuestions: function (examId) {
+		ExamService.getQuestions(examId).then(function (questions) {
+			ExamDispatcher.handleViewAction({
+				actionType: ExamConstants.EXAM_LOAD_QUESTIONS,
+				data: {examId, questions}
+			});
+		});
+	}
 };

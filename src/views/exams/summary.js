@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import { 
 	Card, CardHeader, CardText, CardActions, 
 	Avatar, 
@@ -29,9 +30,10 @@ export default class ExamSummary extends Component {
 				<CardActions expandable={true}>
 					<RaisedButton 
 						primary={true} 
-						label="See Questions" 
+						label="Take Exam" 
 						linkButton={true} 
-						href="/#/questions" />
+						containerElement={<Link to={`/exams/${exam.id}/take`}/>} />
+
 					<FloatingActionButton 
 						secondary={true} 
 						label="Edit" 
@@ -39,7 +41,7 @@ export default class ExamSummary extends Component {
 						linkButton={true} 
 						mini={true}
 						style={{float: 'right'}}
-						href={`/#/exams/${exam.id}/edit`}>
+						containerElement={<Link to={`/exams/${exam.id}/edit`}/>}>
 						<FontIcon className="material-icons">mode_edit</FontIcon>
 					</FloatingActionButton>
 				</CardActions>
