@@ -1,4 +1,5 @@
 import * as Http from 'superagent';
+import { pick } from 'lodash';
 
 export class AuthService {
 	static apiEndPoint = 'http://localhost:3000/api/v1/auth'
@@ -30,7 +31,7 @@ export class AuthService {
 					return reject(response.body.errors);
 
 				this.setHeaders(response.headers);
-				this.setUser(response.headers);
+				this.setUser(response.body.data);
 				return resolve(response.body.data);
 			});
 		});
@@ -39,12 +40,12 @@ export class AuthService {
 	validate() {
 		const endpoint = `${AuthService.apiEndPoint}/validate_token`;
 		return new Promise((resolve, reject) => {
-			Http.get(url).set(this.getHeaders()).end((err, response) => {
+			const params = pick(this.getHeaders(), ['uid', 'client', 'access-token']);
+			Http.get(endpoint).query(params).end((err, response) => {
 				if (err)
 					return reject(response.body.errors);
 
-				this.setHeaders(response.headers);
-				this.setUser(response.headers);
+				this.setUser(response.body.data);
 				return resolve(response.body.data);
 			});
 		});

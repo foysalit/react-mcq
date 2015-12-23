@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import AuthActions from '../../actions/auth';
 import AppActions from '../../actions/app';
 import AuthStore from '../../stores/auth';
-import { 
+import {
 	ClearFix, Styles,
 	TextField,
-	RaisedButton, FloatingActionButton, FontIcon 
-} from 'material-ui'; 
+	RaisedButton, FloatingActionButton, FontIcon
+} from 'material-ui';
 import { Link } from 'react-router';
 
 const { Colors } = Styles;
@@ -71,38 +71,39 @@ export default class AuthSignin extends Component {
 						})}
 					</div>
 				: null }
+				<form onSubmit={this.signin.bind(this)}>
+					<div style={ styles.wrapper }>
+						<TextField
+							ref='email'
+							style={ styles.field }
+							type='email'
+							hintText="Email Address" />
+					</div>
 
-				<div style={ styles.wrapper }>
-					<TextField 
-						ref='email'
-						style={ styles.field }
-						type='email'
-						hintText="Email Address" />
-				</div>
+					<div style={ styles.wrapper }>
+						<TextField
+							ref="password"
+							style={ styles.field }
+							hintText="Password"
+							type="password"/>
+					</div>
 
-				<div style={ styles.wrapper }>
-					<TextField 
-						ref="password"
-						style={ styles.field }
-						hintText="Password" 
-						type="password"/>
-				</div>
+					<FloatingActionButton
+						secondary={true}
+						label="Signup"
+						labelPosition="after"
+						linkButton={true}
+						mini={true}
+						containerElement={<Link to="/auth/signup" />}>
+						<FontIcon className="material-icons">lock_open</FontIcon>
+					</FloatingActionButton>
 
-				<FloatingActionButton 
-					secondary={true} 
-					label="Signup" 
-					labelPosition="after"
-					linkButton={true} 
-					mini={true}
-					containerElement={<Link to="/auth/signup" />}>
-					<FontIcon className="material-icons">lock_open</FontIcon>
-				</FloatingActionButton>
-
-				<RaisedButton 
-					style={{float: 'right'}}
-					onTouchTap={this.signin.bind(this)}
-					primary={true} 
-					label="Login" />
+					<RaisedButton
+						style={{float: 'right'}}
+						onTouchTap={this.signin.bind(this)}
+						primary={true}
+						label="Login" />
+				</form>
 
 			</ClearFix>
 		);

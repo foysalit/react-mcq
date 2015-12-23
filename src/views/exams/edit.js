@@ -8,14 +8,16 @@ import ExamStore from '../../stores/exam';
 import AuthStore from '../../stores/auth';
 
 import QuestionSingle from '../questions/single';
+import ChoiceForm from '../choices/form';
+import ExamForm from './form';
 
-import { 
+import {
 	ClearFix, Styles, Paper,
 	List, ListItem,
 	IconMenu, MenuItem,
 	TextField,
-	IconButton, RaisedButton, FloatingActionButton, FontIcon 
-} from 'material-ui'; 
+	IconButton, RaisedButton, FloatingActionButton, FontIcon
+} from 'material-ui';
 import { Link } from 'react-router';
 
 const { Colors } = Styles;
@@ -79,10 +81,26 @@ export default class ExamEdit extends Component {
 	}
 
 	selectForEdit(question) {
+		QuestionActions.load(question);
 		QuestionActions.loadChoices(question.id).then(() => {
 			this.setState({editingQuestion: QuestionStore.getOne(question.id)});
-			console.log(this.state);			
 		});
+	}
+
+	choiceUpdated(e, data) {
+
+	}
+
+	updateExamTitle(e) {
+		let {exam} = this.state;
+		if (!exam) return;
+
+		exam.title = e.target.value;
+		this.setState({exam: exam});
+	}
+
+	updateExam() {
+		ExamActions.save(this.state.exam);
 	}
 
 	render() {
@@ -91,11 +109,16 @@ export default class ExamEdit extends Component {
 
 		return (
 			<div>
+			<ExamForm
+				exam={exam}
+				onTitleChange={this.updateExamTitle.bind(this)}
+				completeAction={this.updateExam.bind(this)}
+				type="edit"/>
 			{(editingQuestion) ?
 			<Paper style={styles.wrapper}>
 				<div style={ styles.header }>
 					<div style={ styles.fieldWrapper }>
-						<TextField 
+						<TextField
 							ref='title'
 							inputStyle={{ color: Colors.white }}
 							style={ styles.field }
@@ -105,18 +128,18 @@ export default class ExamEdit extends Component {
 					</div>
 
 					<div style={{float: 'right', marginTop: '25px'}}>
-						<FloatingActionButton 
+						<FloatingActionButton
 							style={{marginRight: '10px'}}
-							secondary={true} 
-							label="Add Question" 
+							secondary={true}
+							label="Add Question"
 							labelPosition="after"
 							onTouchTap={this.addQuestion}
 							mini={true}>
 							<FontIcon className="material-icons">add</FontIcon>
 						</FloatingActionButton>
-						<FloatingActionButton 
+						<FloatingActionButton
 							style={{marginRight: '10px'}}
-							label="Save" 
+							label="Save"
 							labelPosition="after"
 							onTouchTap={this.saveQuestion}
 							mini={true}>
@@ -125,27 +148,30 @@ export default class ExamEdit extends Component {
 					</div>
 				</div>
 
-				<div style={{padding: '2% 3%'}}>
-					<div style={ styles.fieldWrapper }>
-						<TextField 
-							ref='email'
-							style={ styles.field }
-							type='email'
-							hintText="Email Address" />
+				{ (editingQuestion.choices && editingQuestion.choices.length > 0) ?
+					<div style={{padding: '2% 3%'}}>
+					<h3>Choices</h3>
+					{ editingQuestion.choices.map((choice) => {
+						return <ChoiceForm
+							choice={choice}
+							updateChoice={this.choiceUpdated.bind(this)}
+							onChange={this.choiceUpdated.bind(this)}/>;
+					})}
 					</div>
-				</div>
+				: null }
 			</Paper>
 			: null }
 
 			<Paper style={styles.wrapper}>
-				{ (exam && exam.questions && exam.questions.length > 0) ? 
+				{ (exam && exam.questions && exam.questions.length > 0) ?
 					<List subheader="Questions">
 						{exam.questions.map((question) => {
 							return (<ListItem
+								key={question.id}
 								onTouchTap={this.selectForEdit.bind(this, question)}
 								rightIconButton={
-									<IconButton 
-										iconClassName="material-icons" 
+									<IconButton
+										iconClassName="material-icons"
 										onTouchTap={this.selectForEdit.bind(this, question)}
 										touch={true}>
 										edit

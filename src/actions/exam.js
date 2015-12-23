@@ -3,15 +3,13 @@ import ExamConstants from '../constants/exam';
 import ExamService from '../services/exam';
 
 export default {
-	create: function(newContact) {
-
-		var avatar = 'img/faces/' + Math.floor(Math.random() * (15-1) + 1) + '.jpg';
-		newContact.avatar = avatar;
-
-		ExamDispatcher.handleViewAction({
-			actionType: ExamConstants.EXAM_CREATE,
-			data: exam
-		});
+	create: function(exam) {
+		ExamService.create(exam).then((createdExam) => {
+			ExamDispatcher.handleViewAction({
+				actionType: ExamConstants.EXAM_CREATE,
+				data: createdExam
+			});
+		})
 	},
 
 	edit: function(exam) {
@@ -22,10 +20,12 @@ export default {
 	},
 
 	save: function(exam) {
-		ExamDispatcher.handleViewAction({
-			actionType: ExamConstants.EXAM_SAVE,
-			data: exam
-		});
+		ExamService.save(exam).then(() => {
+			ExamDispatcher.handleViewAction({
+				actionType: ExamConstants.EXAM_SAVE,
+				data: exam
+			});
+		})
 	},
 
 

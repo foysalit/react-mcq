@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { AppBar, Icons, FontIcon } from 'material-ui'; 
+import { AppBar, Icons, FontIcon } from 'material-ui';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
-import MenuItem from 'material-ui/lib/menus/menu-item'; 
-import IconButton from 'material-ui/lib/icon-button'; 
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import IconButton from 'material-ui/lib/icon-button';
 import LeftNav from 'material-ui/lib/left-nav';
 import AuthStore from './stores/auth';
 import CommonStore from './stores/common';
@@ -10,6 +10,7 @@ import CommonStore from './stores/common';
 function _getMenuItems () {
 	const userMenuItems = [
 		{ route: 'exams', text: 'Exams'},
+		{ route: 'exams/create', text: 'Add Exam'},
 		{ route: 'questions', text: 'Questions'},
 	];
 
@@ -17,7 +18,7 @@ function _getMenuItems () {
 		{ route: 'auth/signin', text: 'SignIn'},
 		{ route: 'auth/signup', text: 'SignUp'}
 	];
-	
+
 	if (AuthStore.isLoggedIn())
 		return userMenuItems;
 
@@ -67,7 +68,7 @@ export class App extends Component {
 	render() {
 		return (
 			<div>
-				<LeftNav 
+				<LeftNav
 					docked={false}
 				  	ref="leftNav"
 					onChange={this.pageChanged.bind(this)}
@@ -87,7 +88,7 @@ export class App extends Component {
 
 				<div style={{marginTop: '15px'}}>
 					{this.props.children}
-				</div>	
+				</div>
 			</div>
 		);
 	}

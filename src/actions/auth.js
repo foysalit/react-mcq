@@ -4,7 +4,7 @@ import AuthService from '../services/auth';
 
 export default {
 	showError(err) {
-		console.log('error in auth service', err);	
+		console.log('error in auth service', err);
 	},
 
 	signin: function (credentials) {
@@ -37,7 +37,6 @@ export default {
 
 	checkUser: function () {
 		return AuthService.validate().then((data) => {
-			console.log(data);
 			AuthDispatcher.handleViewAction({
 				actionType: AuthConstants.AUTH_LOGIN,
 				data: data

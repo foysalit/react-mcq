@@ -3,7 +3,7 @@ import AuthSignin from './signin';
 import AuthSignup from './signup';
 import AuthStore from '../../stores/auth';
 import AppActions from '../../actions/app';
-import { Paper } from 'material-ui'; 
+import { Paper } from 'material-ui';
 
 export class Auth extends Component {
 	constructor(props) {
@@ -13,7 +13,7 @@ export class Auth extends Component {
 	_authChanged () {
 		const { location, history } = this.props
 
-		console.log(AuthStore.isLoggedIn());
+		// console.log(AuthStore.isLoggedIn());
 		if (!AuthStore.isLoggedIn())
 			return;
 

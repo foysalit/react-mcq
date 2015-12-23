@@ -19,6 +19,24 @@ export class ExamService {
 		});
 	}
 
+	create(exam) {
+		return callApi(ExamService.apiEndPoint, 'POST', {exam: exam}).then(function	(response) {
+			console.log(response.body);
+			return response.body;
+		}).catch(function (err) {
+			console.log('error creating exam', err);
+		});
+	}
+
+	save(exam) {
+		const endPoint = ExamService.apiEndPoint + exam.id;
+		return callApi(endPoint, 'PUT', {exam: exam}).then(function	(response) {
+			console.log(response.body);
+		}).catch(function (err) {
+			console.log('error saving exam', err);
+		});
+	}
+
 	getQuestions(examId) {
 		const endPoint = ExamService.apiEndPoint + examId +'/questions';
 		return callApi(endPoint).then(function (response) {

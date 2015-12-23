@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { ExamList, ExamEdit } from './views/exams/';
+import { ExamList, ExamEdit, ExamCreate } from './views/exams/';
 import { Auth, AuthSignin, AuthSignup } from './views/auth';
 import { Question } from './views/questions/index.js';
 import { App } from './App';
@@ -19,22 +19,35 @@ const history = useBasename(createHistory)({
 
 function requireAuth(nextState, replaceState, done) {
 	AuthActions.checkUser().then(() => {
-		console.log(AuthStore.isLoggedIn());
 		if (!AuthStore.isLoggedIn())
 			replaceState({ nextPathname: nextState.location.pathname }, '/auth/signin');
-		
+
+		done();
+	}).catch(() => {
+		return replaceState({ nextPathname: nextState.location.pathname }, '/auth/signin');
+	});
+
+}
+
+function checkAuth(nextState, replaceState, done) {
+	AuthActions.checkUser().then((data) => {
+		console.log(AuthStore.isLoggedIn(), data);
+		if (AuthStore.isLoggedIn())
+			replaceState({  }, '/exams');
+
 		done();
 	});
-	
+
 }
 
 render((
 	<Router history={history}>
 		<Route path="/" component={App}>
 			<Route path="exams" component={ExamList} onEnter={requireAuth} />
+			<Route path="/exams/create" component={ExamCreate} onEnter={requireAuth} />
 			<Route path="/exams/:examId/edit" component={ExamEdit} onEnter={requireAuth} />
 			<Route path="questions" component={Question} onEnter={requireAuth} />
-			<Route path="auth" component={Auth}>
+			<Route path="auth" component={Auth} onEnter={checkAuth}>
 				<Route path="/auth/signin" component={AuthSignin} />
 				<Route path="/auth/signup" component={AuthSignup} />
 			</Route>

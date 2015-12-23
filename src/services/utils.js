@@ -8,12 +8,17 @@ export function callApi (url, method, data) {
 		let request = null;
 
 		switch (method) {
-			case 'POST': 
+			case 'POST':
 				request = Http.post(url).send(data)
 				break;
 
 			case 'GET':
 				request = Http.get(url);
+				break;
+				break;
+
+			case 'PUT':
+				request = Http.put(url).send(data);
 				break;
 
 			default:
