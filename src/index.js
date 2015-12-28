@@ -31,13 +31,11 @@ function requireAuth(nextState, replaceState, done) {
 
 function checkAuth(nextState, replaceState, done) {
 	AuthActions.checkUser().then((data) => {
-		console.log(AuthStore.isLoggedIn(), data);
 		if (AuthStore.isLoggedIn())
 			replaceState({  }, '/exams');
 
 		done();
 	});
-
 }
 
 render((

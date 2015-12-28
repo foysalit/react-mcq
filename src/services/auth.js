@@ -1,5 +1,5 @@
 import * as Http from 'superagent';
-import { pick } from 'lodash';
+import { pick, isEmpty } from 'lodash';
 
 export class AuthService {
 	static apiEndPoint = 'http://localhost:3000/api/v1/auth'
@@ -7,7 +7,10 @@ export class AuthService {
 	static userKey = 'auth.user'
 
 	setHeaders(headers) {
-		localStorage.setItem(AuthService.headersKey, JSON.stringify(headers));
+		let filteredHeaders = pick(headers, ['uid', 'client', 'access-token']);
+
+		if(!isEmpty(filteredHeaders))
+			localStorage.setItem(AuthService.headersKey, JSON.stringify(filteredHeaders));
 	}
 
 	setUser(user) {
@@ -40,8 +43,7 @@ export class AuthService {
 	validate() {
 		const endpoint = `${AuthService.apiEndPoint}/validate_token`;
 		return new Promise((resolve, reject) => {
-			const params = pick(this.getHeaders(), ['uid', 'client', 'access-token']);
-			Http.get(endpoint).query(params).end((err, response) => {
+			Http.get(endpoint).query(this.getHeaders()).end((err, response) => {
 				if (err)
 					return reject(response.body.errors);
 

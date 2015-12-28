@@ -61,6 +61,7 @@ AuthDispatcher.register(function(payload){
 		// Respond to RECEIVE_DATA action
 		case AuthConstants.AUTH_ERROR:
 			loadErrors(action.data);
+			setUser({});
 			break;
 
 		default:
