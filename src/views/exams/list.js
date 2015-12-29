@@ -4,7 +4,7 @@ import ExamStore from '../../stores/exam';
 import ExamService from '../../services/exam';
 import ExamSummary from './summary';
 import AppActions from '../../actions/app';
-import { Card, CardHeader, CardText, CardActions, Avatar, FlatButton } from 'material-ui'; 
+import { Card, CardHeader, CardText, CardActions, Avatar, FlatButton } from 'material-ui';
 import AutoResponsive from 'autoresponsive-react';
 
 function _getExamsState () {
@@ -17,18 +17,19 @@ export default class ExamList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = _getExamsState();
+		this._onChange = this._onChange.bind(this);
 	}
 
 	componentDidMount() {
 		ExamService.getAll();
-		ExamStore.addChangeListener(this._onChange.bind(this));
+		ExamStore.addChangeListener(this._onChange);
 
 		window.addEventListener('resize', () => {
 			this.setState({
 				containerWidth: React.findDOMNode(this.refs.container).clientWidth
 			});
 		}, false);
-		
+
 		AppActions.changeTitle('Exams');
 	}
 
@@ -43,7 +44,7 @@ export default class ExamList extends Component {
 	}
 
 	componentWillUnmount() {
-		ExamStore.removeChangeListener(this._onChange.bind(this));
+		ExamStore.removeChangeListener(this._onChange);
 	}
 
 	_onChange() {

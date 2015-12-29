@@ -4,11 +4,12 @@ import ExamService from '../services/exam';
 
 export default {
 	create: function(exam) {
-		ExamService.create(exam).then((createdExam) => {
+		return ExamService.create(exam).then((createdExam) => {
 			ExamDispatcher.handleViewAction({
 				actionType: ExamConstants.EXAM_CREATE,
 				data: createdExam
 			});
+			return createdExam;
 		})
 	},
 
@@ -44,8 +45,8 @@ export default {
 	},
 
 	loadOne: function (examId) {
-		ExamService.getOne(examId).then(function (exam) {
-			ExamDispatcher.handleViewAction({
+		return ExamService.getOne(examId).then(function (exam) {
+			return ExamDispatcher.handleViewAction({
 				actionType: ExamConstants.EXAM_LOAD_ONE,
 				data: exam
 			});

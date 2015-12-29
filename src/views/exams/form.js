@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import {
 	Paper, TextField,
 	RaisedButton, FloatingActionButton, FontIcon
 } from 'material-ui';
 
+import QuestionList from '../questions/index';
+
 export default class ExamForm extends Component {
+	static propTypes = {
+		exam: PropTypes.object,
+		type: PropTypes.string,
+		completeAction: PropTypes.func
+	}
+
 	constructor(props) {
 		super(props);
 	}
@@ -21,7 +29,7 @@ export default class ExamForm extends Component {
                 padding: '2% 1.5%'
 			},
 			field: {
-				width: '100%'
+				width: '90%'
 			}
 		};
 	}
@@ -44,6 +52,7 @@ export default class ExamForm extends Component {
         const options = this.getOptions(type);
 
 		return (
+			<div>
             <Paper style={styles.wrapper}>
                 <div style={styles.fieldWrapper}>
                     <TextField
@@ -51,10 +60,24 @@ export default class ExamForm extends Component {
                         type='text'
                         value={exam.title}
                         onChange={onTitleChange}
-                        onBlur={completeAction}
                         floatingLabelText={options.titleLabel} />
+
+					<FloatingActionButton
+						label="Save"
+						labelPosition="after"
+						linkButton={true}
+						mini={true}
+						onTouchTap={completeAction}
+						style={{float: 'right', marginTop: '20px'}}>
+						<FontIcon className="material-icons">done_all</FontIcon>
+					</FloatingActionButton>
                 </div>
             </Paper>
+
+			{ (exam && exam.id) ?
+				<QuestionList questions={exam.questions}/>
+			: null }
+			</div>
 		);
 	}
 }

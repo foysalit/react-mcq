@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import {
 	TextField,
@@ -6,6 +6,10 @@ import {
 } from 'material-ui';
 
 export default class ChoiceForm extends Component {
+	propTypes: {
+		coice: PropTypes.object
+	}
+
 	constructor(props) {
 		super(props);
 	}

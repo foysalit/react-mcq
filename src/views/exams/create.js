@@ -18,12 +18,19 @@ import { Link } from 'react-router';
 
 const { Colors } = Styles;
 
+function _getDataState(examId) {
+	return {
+		answers: [],
+		exam: (examId) ? ExamStore.getOne(examId) : {title: ''},
+		editingQuestion: null
+	};
+}
+
 export default class ExamCreate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {exam: {
-            title: ''
-        }};
+		this.state = _getDataState();
+		this.loadState = this.loadState.bind(this);
 	}
 
 	getStyles() {
@@ -47,8 +54,20 @@ export default class ExamCreate extends Component {
 		};
 	}
 
+	loadState() {
+		this.setState(_getDataState(this.props.params.examId));
+	}
+
 	componentDidMount() {
+		QuestionStore.addChangeListener(this.loadState);
+		ExamStore.addChangeListener(this.loadState);
+
 		AppActions.changeTitle('Create Exam');
+	}
+
+	componentWillUnmount() {
+		QuestionStore.removeChangeListener(this.loadState);
+		ExamStore.removeChangeListener(this.loadState);
 	}
 
 	updateExamTitle(e) {
@@ -60,7 +79,11 @@ export default class ExamCreate extends Component {
 	}
 
 	createExam() {
-		ExamActions.create(this.state.exam);
+		ExamActions.create(this.state.exam).then((createdExam) => {
+			ExamActions.loadQuestions(createdExam.id);
+			this.setState({exam: createdExam});
+			console.log(createdExam);
+		});
 	}
 
 	render() {
@@ -68,13 +91,11 @@ export default class ExamCreate extends Component {
 		let { exam } = this.state;
 
 		return (
-			<div>
 			<ExamForm
 				exam={exam}
 				onTitleChange={this.updateExamTitle.bind(this)}
 				completeAction={this.createExam.bind(this)}
 				type="create"/>
-			</div>
 		);
 	}
 }

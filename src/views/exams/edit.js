@@ -7,7 +7,6 @@ import ExamActions from '../../actions/exam';
 import ExamStore from '../../stores/exam';
 import AuthStore from '../../stores/auth';
 
-import QuestionSingle from '../questions/single';
 import ChoiceForm from '../choices/form';
 import ExamForm from './form';
 
@@ -34,6 +33,7 @@ export default class ExamEdit extends Component {
 	constructor(props) {
 		super(props);
 		this.state = _getDataState();
+		this.loadState = this.loadState.bind(this);
 	}
 
 	addAnswer() {
@@ -68,23 +68,18 @@ export default class ExamEdit extends Component {
 	}
 
 	componentDidMount() {
-		QuestionStore.addChangeListener(this.loadState.bind(this));
-		ExamStore.addChangeListener(this.loadState.bind(this));
+		QuestionStore.addChangeListener(this.loadState);
+		ExamStore.addChangeListener(this.loadState);
 
 		AppActions.changeTitle('Edit Exam');
-		ExamActions.loadQuestions(this.props.params.examId);
+		ExamActions.loadOne(this.props.params.examId).then(() => {
+			ExamActions.loadQuestions(this.props.params.examId);
+		});
 	}
 
 	componentWillUnmount() {
-		QuestionStore.removeChangeListener(this.loadState.bind(this));
-		ExamStore.removeChangeListener(this.loadState.bind(this));
-	}
-
-	selectForEdit(question) {
-		QuestionActions.load(question);
-		QuestionActions.loadChoices(question.id).then(() => {
-			this.setState({editingQuestion: QuestionStore.getOne(question.id)});
-		});
+		QuestionStore.removeChangeListener(this.loadState);
+		ExamStore.removeChangeListener(this.loadState);
 	}
 
 	choiceUpdated(e, data) {
@@ -114,6 +109,7 @@ export default class ExamEdit extends Component {
 				onTitleChange={this.updateExamTitle.bind(this)}
 				completeAction={this.updateExam.bind(this)}
 				type="edit"/>
+
 			{(editingQuestion) ?
 			<Paper style={styles.wrapper}>
 				<div style={ styles.header }>
@@ -161,27 +157,6 @@ export default class ExamEdit extends Component {
 				: null }
 			</Paper>
 			: null }
-
-			<Paper style={styles.wrapper}>
-				{ (exam && exam.questions && exam.questions.length > 0) ?
-					<List subheader="Questions">
-						{exam.questions.map((question) => {
-							return (<ListItem
-								key={question.id}
-								onTouchTap={this.selectForEdit.bind(this, question)}
-								rightIconButton={
-									<IconButton
-										iconClassName="material-icons"
-										onTouchTap={this.selectForEdit.bind(this, question)}
-										touch={true}>
-										edit
-									</IconButton>}
-				                primaryText={question.title} />
-				            )
-						})}
-					</List>
-				: null}
-			</Paper>
 			</div>
 		);
 	}
